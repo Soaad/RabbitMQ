@@ -8,16 +8,27 @@ using var channel = connection.CreateModel();
 
 Console.WriteLine("[*] waiting for message");
 
-var consumer = new EventingBasicConsumer(channel);
-consumer.Received += (model, ea) =>
-{
-    var body = ea.Body.ToArray();
-    var message = Encoding.UTF8.GetString(body);
-    Console.WriteLine($"[X] recieved message {message}");
+ConsumeMessage("q.fanout1");
+//ConsumeMessage("q.fanout2");
+//ConsumeMessage("q.fanout3");
 
-};
 
-channel.BasicConsume(queue: "qu-notification", autoAck: true, consumer: consumer);
 
 Console.WriteLine("Press enter to exit");
 Console.ReadLine();
+
+void ConsumeMessage(string queue)
+{
+    var consumer=new EventingBasicConsumer(channel);    
+    consumer.Received += (model, ea) =>
+    {
+        var body = ea.Body.ToArray();
+        var message = Encoding.UTF8.GetString(body);
+
+        //do your processing here such as sending notification
+        Console.WriteLine($"[X] recieved message {message} from Queue{ queue}");
+
+    };
+    channel.BasicConsume(queue:queue,autoAck:true,consumer:consumer);
+
+}
