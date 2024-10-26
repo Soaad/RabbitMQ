@@ -13,11 +13,12 @@ consumer.Received += (model, ea) =>
 {
     var body = ea.Body.ToArray();
     var message = Encoding.UTF8.GetString(body);
+    //here to do some processing
     Console.WriteLine($"[X] recieved message {message}");
 
 };
 
-channel.BasicConsume(queue: "q.health1", autoAck: true, consumer: consumer);
+channel.BasicConsume(queue: "q.header1", autoAck: true, consumer: consumer);
 
 Console.WriteLine("Press enter to exit");
 Console.ReadLine();
